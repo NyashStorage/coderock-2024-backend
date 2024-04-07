@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "ES2022",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "baseUrl": "./",
+
+    /* Настройки сборщика */
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    /* Настройки линтинга */
+    "strict": true,
+    "noImplicitAny": false,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+  },
+  "exclude": ["node_modules", "dist"]
+}

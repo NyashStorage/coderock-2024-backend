@@ -4,7 +4,6 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import type { ServerResponse } from 'http';
 
 (async (): Promise<any> => {
@@ -48,20 +47,6 @@ import type { ServerResponse } from 'http';
         // Не засчитывает поля запроса, у которых нет декоратора проверки.
         whitelist: true,
       }),
-    );
-
-    // Подключаем документацию.
-    SwaggerModule.setup(
-      'api/docs',
-      app,
-      SwaggerModule.createDocument(
-        app,
-        new DocumentBuilder()
-          .setTitle('CodeRock 2024')
-          .setVersion(configService.get('API_VERSION') || '1.0.0')
-          .addBearerAuth()
-          .build(),
-      ),
     );
 
     // Запускаем приложение.

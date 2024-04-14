@@ -1,12 +1,14 @@
+import type { Relation } from 'type-check';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { AutoMap } from 'automapper-classes';
 import StoreType from '../types/enums/store-type.enum';
+import UserEntity from '../../users/entities/user.entity';
 
 @Entity('stores')
 export default class StoreEntity {
@@ -25,9 +27,9 @@ export default class StoreEntity {
   @AutoMap()
   type: StoreType;
 
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  owner: Relation<UserEntity>;
+
   @CreateDateColumn()
   createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

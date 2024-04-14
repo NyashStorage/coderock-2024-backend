@@ -2,7 +2,6 @@ import type { Relation } from 'typeorm';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -11,9 +10,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { AutoMap } from 'automapper-classes';
-import CategoryEntity from '../../categories/entities/category.entity';
 import type ProductProperties from '../types/interfaces/product-properties.interface';
 import StoreEntity from '../../stores/entities/store.entity';
+import CategoryEntity from '../../categories/entities/category.entity';
+import UserEntity from '../../users/entities/user.entity';
 
 @Entity('products')
 export default class ProductEntity {
@@ -34,15 +34,9 @@ export default class ProductEntity {
   @AutoMap()
   description: string;
 
-  @ManyToOne(() => CategoryEntity)
-  category: Relation<CategoryEntity>;
-
-  @Column({
-    type: 'blob',
-    nullable: true,
-  })
+  @Column()
   @AutoMap()
-  photo: Blob | null;
+  photo: string;
 
   /**
    * Стоимость в копейках.
@@ -58,13 +52,22 @@ export default class ProductEntity {
    */
   @Column({
     type: 'json',
-    nullable: true,
     comment: 'Дополнительные параметры продукта',
   })
   @AutoMap(() => Object)
-  properties: ProductProperties | null;
+  properties: ProductProperties;
 
-  @ManyToMany(() => StoreEntity)
+  @ManyToOne(() => CategoryEntity, {
+    onDelete: 'SET NULL',
+  })
+  category: Relation<CategoryEntity>;
+
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  owner: Relation<UserEntity>;
+
+  @ManyToMany(() => StoreEntity, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   stores: Relation<StoreEntity[]>;
 
@@ -79,13 +82,13 @@ export default class ProductEntity {
   enabled: boolean;
 
   /**
-   * Количество продукта на складах в формате { [StoreEntity#id]: number }.
+   * Количество продукта на складах в формате { [RouteEntity#id]: number }.
    */
   @Column({
     type: 'json',
     default: {},
     comment:
-      'Количество продукта на складах в формате { [StoreEntity#id]: number }',
+      'Количество продукта на складах в формате { [RouteEntity#id]: number }',
   })
   @AutoMap(() => Object)
   amount: Record<number, number>;
@@ -95,9 +98,4 @@ export default class ProductEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @DeleteDateColumn({
-    nullable: true,
-  })
-  deletedAt: Date | null;
 }

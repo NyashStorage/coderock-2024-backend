@@ -1,12 +1,7 @@
-import { ApiProperty, PickType } from '@nestjs/swagger';
-
 export class TokenResponse {
-  @ApiProperty({
-    description: 'Токен для доступа к защищённым методам API',
-  })
   access_token: string;
 }
 
-export class TokensResponse extends PickType(TokenResponse, ['access_token']) {
+export class TokensResponse extends TokenResponse {
   refresh_token: string;
 }

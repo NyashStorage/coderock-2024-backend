@@ -1,9 +1,10 @@
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { Mapper } from 'automapper-core';
-import { createMap } from 'automapper-core';
+import { afterMap, createMap } from 'automapper-core';
 import { Injectable } from '@nestjs/common';
 import UserEntity from '../entities/user.entity';
+import CompanyUserResponse from '../dto/responses/company-user.response';
 import UserResponse from '../dto/responses/user.response';
 
 @Injectable()
@@ -15,6 +16,15 @@ export default class UserProfile extends AutomapperProfile {
   override get profile() {
     return (mapper: Mapper): void => {
       createMap(mapper, UserEntity, UserResponse);
+      createMap(
+        mapper,
+        UserEntity,
+        CompanyUserResponse,
+        afterMap((source, destination) => {
+          destination.companyName =
+            source.profile.companyName || 'Неизвестная компания';
+        }),
+      );
     };
   }
 }

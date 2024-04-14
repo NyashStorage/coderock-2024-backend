@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import UserEntity from '../entities/user.entity';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -10,7 +10,9 @@ export default class UsersRepository {
     private readonly repo: Repository<UserEntity>,
   ) {}
 
-  public create(entity: Omit<UserEntity, 'id'>): Promise<UserEntity> {
+  public create(
+    entity: Omit<UserEntity, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<UserEntity> {
     const createdEntity = new UserEntity();
     Object.assign(createdEntity, entity);
 
@@ -19,15 +21,22 @@ export default class UsersRepository {
 
   public getById(id: number): Promise<UserEntity | null> {
     return this.repo
-      .createQueryBuilder('user')
-      .where('user.id = :id', { id })
+      .createQueryBuilder('users')
+      .where('users.id = :id', { id })
       .getOne();
   }
 
-  public getByUsername(username: string): Promise<UserEntity | null> {
+  public getByEmail(email: string): Promise<UserEntity | null> {
     return this.repo
-      .createQueryBuilder('user')
-      .where('user.username = :username', { username })
+      .createQueryBuilder('users')
+      .where('users.email = :email', { email })
       .getOne();
+  }
+
+  public async update(
+    id: number,
+    data: DeepPartial<UserEntity>,
+  ): Promise<void> {
+    await this.repo.update(id, data);
   }
 }

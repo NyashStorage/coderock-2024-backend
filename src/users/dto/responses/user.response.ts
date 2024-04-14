@@ -1,12 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { AutoMap } from 'automapper-classes';
+import type Profile from '../../types/interfaces/profile.interface';
 
 export default class UserResponse {
-  @ApiProperty()
   @AutoMap()
   id: number;
 
-  @ApiProperty()
   @AutoMap()
-  username: string;
+  email: string;
+
+  @AutoMap(() => Object)
+  profile: Profile;
 }

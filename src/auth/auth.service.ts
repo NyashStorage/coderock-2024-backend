@@ -22,15 +22,20 @@ export default class AuthService {
    * @throws BadRequestException Пользователь уже зарегистрирован.
    */
   public async register(dto: RegisterUserRequest): Promise<TokensResponse> {
-    let user = await this.usersRepository.getByUsername(dto.username);
+    let user = await this.usersRepository.getByEmail(dto.email);
     if (user)
       throw new BadRequestException(
-        `Пользователь "${user.username}" уже зарегистрирован.`,
+        `Пользователь с почтой "${user.email}" уже зарегистрирован.`,
       );
 
     user = await this.usersRepository.create({
-      username: dto.username,
+      email: dto.email,
       password: md5(dto.password),
+      profile: {
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        companyName: dto.companyName,
+      },
     });
 
     return this.tokensService.generateTokens({
@@ -43,15 +48,15 @@ export default class AuthService {
    * @throws UnauthorizedException Пароль указан неверно.
    */
   public async login(dto: LoginUserRequest): Promise<TokensResponse> {
-    const user = await this.usersRepository.getByUsername(dto.username);
+    const user = await this.usersRepository.getByEmail(dto.email);
     if (!user)
-      throw new NotFoundException(`Пользователь "${dto.username}" не найден.`);
+      throw new NotFoundException(
+        `Пользователь с почтой "${dto.email}" не найден.`,
+      );
 
     const hash = md5(dto.password);
     if (hash !== user.password)
       throw new UnauthorizedException('Пароль указан неверно.');
-
-    // TODO: Добавить ограничение на неверные попытки ввода пароля.
 
     return this.tokensService.generateTokens({
       userId: user.id,

@@ -1,7 +1,7 @@
 {
   "name": "coderock-2024-backend",
   "version": "1.0.0",
-  "description": "API приложения для хранения фотографий",
+  "description": "API приложения маркетплейса",
   "author": {
     "name": "Daniil Koshkin",
     "email": "contact@nyashmyash99.ru",
@@ -16,12 +16,10 @@
     "build": "nest build -c configs/prod/nest-cli.json",
     "dev": "npm run with-options -- nest start --watch -c configs/dev/nest-cli.json",
     "prod": "node --experimental-specifier-resolution=node dist/main.js",
-
     "typeorm:cli": "npm run with-options -- typeorm-ts-node-esm -d scripts/cli-data-source.ts",
     "migration:generate": "npm run typeorm:cli -- migration:generate src/database/migrations/RenameMe",
     "migration:run": "npm run typeorm:cli -- migration:run",
     "migration:revert": "npm run typeorm:cli -- migration:revert",
-
     "lint": "eslint --cache .",
     "with-options": "cross-env NODE_OPTIONS=--experimental-specifier-resolution=node"
   },
@@ -33,7 +31,6 @@
     "@nestjs/core": "^10.3.7",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-fastify": "^10.3.7",
-    "@nestjs/swagger": "^7.3.1",
     "@nestjs/typeorm": "^10.0.2",
     "automapper-classes": "^8.7.12",
     "automapper-nestjs": "^8.7.12",
@@ -42,6 +39,8 @@
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
     "fastify": "^4.26.2",
+    "graphology": "^0.25.4",
+    "graphology-shortest-path": "^2.1.0",
     "md5": "^2.3.0",
     "pg": "^8.11.5",
     "reflect-metadata": "^0.1.13",

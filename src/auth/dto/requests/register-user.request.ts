@@ -1,25 +1,34 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export default class RegisterUserRequest {
-  @ApiProperty({
-    minLength: 3,
+  @IsEmail(undefined, {
+    message: 'Почта должна быть в формате mail@domain.zone.',
   })
-  @IsString()
-  @Length(3, undefined, {
-    message: (args) =>
-      `Имя пользователя должно быть длиннее ${args.constraints[0]} символов.`,
-  })
-  username: string;
+  email: string;
 
-  @ApiProperty({
-    minLength: 6,
-    maxLength: 64,
-  })
   @IsString()
   @Length(3, 64, {
     message: (args) =>
-      `Пароль должен быть длинее ${args.constraints[0]}, но короче ${args.constraints[1]} символов.`,
+      `Пароль должен быть длиннее ${args.constraints[0]}, но короче ${args.constraints[1]} символов.`,
   })
   password: string;
+
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  companyName?: string;
 }

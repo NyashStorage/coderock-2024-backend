@@ -1,12 +1,13 @@
+import type { Relation } from 'typeorm';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { AutoMap } from 'automapper-classes';
+import ProductEntity from '../../products/entities/product.entity';
 
 @Entity('categories')
 export default class CategoryEntity {
@@ -18,14 +19,9 @@ export default class CategoryEntity {
   @AutoMap()
   title: string;
 
+  @OneToMany(() => ProductEntity, (product) => product.category)
+  products: Relation<ProductEntity[]>;
+
   @CreateDateColumn()
   createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({
-    nullable: true,
-  })
-  deletedAt: Date | null;
 }
